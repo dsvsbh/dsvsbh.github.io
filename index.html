@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -17,7 +18,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档">
 <meta property="og:type" content="website">
@@ -115,7 +116,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -133,6 +134,421 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/15/redis%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lzc">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lzc个人博客">
+      <meta itemprop="description" content="欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | lzc个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/10/15/redis%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" class="post-title-link" itemprop="url">redis淘汰策略</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-10-15 14:20:22 / 修改时间：14:21:27" itemprop="dateCreated datePublished" datetime="2024-10-15T14:20:22+08:00">2024-10-15</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在 Redis 中，缓存淘汰策略是内置的，用户可以通过配置来选择合适的策略。Redis 提供多种缓存淘汰策略，主要用于内存限制时控制数据的自动过期或删除。当 Redis 内存达到指定的上限时，会根据配置的策略自动淘汰一些数据。</p>
+<p>Redis 中的主要缓存淘汰策略有以下几种：</p>
+<h3 id="1-Redis-支持的淘汰策略"><a href="#1-Redis-支持的淘汰策略" class="headerlink" title="1. Redis 支持的淘汰策略"></a>1. Redis 支持的淘汰策略</h3><ul>
+<li><strong>noeviction</strong>：当内存不足以容纳新写入数据时，新写入操作会报错。这是 Redis 默认策略，适用于不希望数据被自动淘汰的场景。</li>
+<li><strong>allkeys-lru</strong>：对所有的键使用 LRU（最近最少使用）算法进行淘汰。</li>
+<li><strong>volatile-lru</strong>：只对设置了过期时间的键使用 LRU 算法进行淘汰。</li>
+<li><strong>allkeys-random</strong>：对所有的键随机淘汰。</li>
+<li><strong>volatile-random</strong>：只对设置了过期时间的键随机淘汰。</li>
+<li><strong>volatile-ttl</strong>：只对设置了过期时间的键，选择即将过期的键进行淘汰。</li>
+</ul>
+<h4 id="Redis-4-0-之后新增的策略"><a href="#Redis-4-0-之后新增的策略" class="headerlink" title="Redis 4.0 之后新增的策略"></a>Redis 4.0 之后新增的策略</h4><ul>
+<li><strong>allkeys-lfu</strong>：对所有键使用 LFU 算法进行淘汰，淘汰最少使用的键。</li>
+<li><strong>volatile-lfu</strong>：只对设置了过期时间的键使用 LFU 算法进行淘汰。</li>
+</ul>
+<h3 id="2-配置-Redis-缓存淘汰策略"><a href="#2-配置-Redis-缓存淘汰策略" class="headerlink" title="2. 配置 Redis 缓存淘汰策略"></a>2. 配置 Redis 缓存淘汰策略</h3><p>Redis 的淘汰策略可以通过修改配置文件 <code>redis.conf</code> 或运行时使用命令行配置。</p>
+<h4 id="配置方式一：修改-redis-conf"><a href="#配置方式一：修改-redis-conf" class="headerlink" title="配置方式一：修改 redis.conf"></a>配置方式一：修改 <code>redis.conf</code></h4><p>找到 Redis 配置文件 <code>redis.conf</code>，修改 <code>maxmemory-policy</code> 来设置淘汰策略。例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maxmemory-policy allkeys-lru</span><br></pre></td></tr></table></figure>
+
+<p>此外，可以设置 Redis 的最大内存使用量，超过该内存时 Redis 将开始执行淘汰策略：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maxmemory 256mb</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置方式二：运行时设置"><a href="#配置方式二：运行时设置" class="headerlink" title="配置方式二：运行时设置"></a>配置方式二：运行时设置</h4><p>你可以通过 Redis CLI 动态设置淘汰策略和最大内存使用。执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONFIG SET maxmemory 256mb</span><br><span class="line">CONFIG SET maxmemory-policy allkeys-lru</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-TTL（过期时间）实现"><a href="#3-TTL（过期时间）实现" class="headerlink" title="3. TTL（过期时间）实现"></a>3. TTL（过期时间）实现</h3><p>Redis 提供了两种设置过期时间的方法：</p>
+<ul>
+<li><code>EXPIRE key seconds</code>：为键设置一个存活时间（秒），过期后自动删除。</li>
+<li><code>SET key value EX seconds</code>：在设置键的同时指定过期时间（秒）。</li>
+</ul>
+<h4 id="示例："><a href="#示例：" class="headerlink" title="示例："></a>示例：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SET user:1001 <span class="string">&quot;John&quot;</span> EX 60  <span class="comment"># 设置 key 为 user:1001，60秒后过期</span></span><br><span class="line">EXPIRE user:1002 120         <span class="comment"># 为现有 key user:1002 设置120秒的过期时间</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-Redis-LRU-实现机制"><a href="#4-Redis-LRU-实现机制" class="headerlink" title="4. Redis LRU 实现机制"></a>4. Redis LRU 实现机制</h3><p>Redis 的 LRU 并不是严格精确的 LRU，它使用了近似算法。默认情况下，Redis 通过采样的方式（默认采样 5 个键）来判断最近最少使用的键进行淘汰。你可以通过调整 <code>maxmemory-samples</code> 参数来控制采样数，采样数越大，LRU 越准确，但性能也会受到一定影响。</p>
+<h4 id="示例：-1"><a href="#示例：-1" class="headerlink" title="示例："></a>示例：</h4><p>在配置文件中设置采样数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maxmemory-samples 10</span><br></pre></td></tr></table></figure>
+
+<p>运行时设置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CONFIG SET maxmemory-samples 10</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-Redis-缓存淘汰策略实战"><a href="#5-Redis-缓存淘汰策略实战" class="headerlink" title="5. Redis 缓存淘汰策略实战"></a>5. Redis 缓存淘汰策略实战</h3><p>假设我们有一个 Redis 实例，用来缓存用户的会话信息，并且只想缓存最新活跃的会话用户，同时确保 Redis 的内存不会超过 128MB，并使用 LRU 算法淘汰不活跃的会话：</p>
+<ol>
+<li><p><strong>设置 Redis 的最大内存和 LRU 策略</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONFIG SET maxmemory 128mb</span><br><span class="line">CONFIG SET maxmemory-policy allkeys-lru</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>向 Redis 写入会话数据，并设置过期时间</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SET session:user:1001 <span class="string">&quot;session_data&quot;</span> EX 3600  <span class="comment"># 会话信息1小时过期</span></span><br><span class="line">SET session:user:1002 <span class="string">&quot;session_data&quot;</span> EX 3600</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>监控淘汰情况</strong>：<br> 当 Redis 内存达到 128MB 时，Redis 将根据 LRU 算法自动淘汰最近最少使用的会话数据，以腾出空间。</p>
+</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在 Redis 中，缓存淘汰策略已经内置并且可以通过简单配置来启用。在选择合适的策略时，应该结合业务场景，例如如果业务中所有键都有过期时间，可以选择 <code>volatile-lru</code> 或 <code>volatile-ttl</code>，而如果没有过期时间且想控制整体缓存大小，可以选择 <code>allkeys-lru</code> 或 <code>allkeys-random</code>。</p>
+<p>Redis 中的主要缓存淘汰策略有以下几种：</p>
+<ol>
+<li>Redis 支持的淘汰策略<br>noeviction：当内存不足以容纳新写入数据时，新写入操作会报错。这是 Redis 默认策略，适用于不希望数据被自动淘汰的场景。<br>allkeys-lru：对所有的键使用 LRU（最近最少使用）算法进行淘汰。<br>volatile-lru：只对设置了过期时间的键使用 LRU 算法进行淘汰。<br>allkeys-random：对所有的键随机淘汰。<br>volatile-random：只对设置了过期时间的键随机淘汰。<br>volatile-ttl：只对设置了过期时间的键，选择即将过期的键进行淘汰。<br>Redis 4.0 之后新增的策略<br>allkeys-lfu：对所有键使用 LFU 算法进行淘汰，淘汰最少使用的键。<br>volatile-lfu：只对设置了过期时间的键使用 LFU 算法进行淘汰。</li>
+<li>配置 Redis 缓存淘汰策略<br>Redis 的淘汰策略可以通过修改配置文件 redis.conf 或运行时使用命令行配置。</li>
+</ol>
+<p>配置方式一：修改 redis.conf<br>找到 Redis 配置文件 redis.conf，修改 maxmemory-policy 来设置淘汰策略。例如：</p>
+<p>maxmemory-policy allkeys-lru<br>1<br>此外，可以设置 Redis 的最大内存使用量，超过该内存时 Redis 将开始执行淘汰策略：</p>
+<p>maxmemory 256mb<br>1<br>配置方式二：运行时设置<br>你可以通过 Redis CLI 动态设置淘汰策略和最大内存使用。执行以下命令：</p>
+<p>CONFIG SET maxmemory 256mb<br>CONFIG SET maxmemory-policy allkeys-lru<br>1<br>2<br>3. TTL（过期时间）实现<br>Redis 提供了两种设置过期时间的方法：</p>
+<p>EXPIRE key seconds：为键设置一个存活时间（秒），过期后自动删除。<br>SET key value EX seconds：在设置键的同时指定过期时间（秒）。<br>示例：<br>SET user:1001 “John” EX 60  # 设置 key 为 user:1001，60秒后过期<br>EXPIRE user:1002 120         # 为现有 key user:1002 设置120秒的过期时间<br>1<br>2<br>4. Redis LRU 实现机制<br>Redis 的 LRU 并不是严格精确的 LRU，它使用了近似算法。默认情况下，Redis 通过采样的方式（默认采样 5 个键）来判断最近最少使用的键进行淘汰。你可以通过调整 maxmemory-samples 参数来控制采样数，采样数越大，LRU 越准确，但性能也会受到一定影响。</p>
+<p>示例：<br>在配置文件中设置采样数：</p>
+<p>maxmemory-samples 10<br>1<br>运行时设置：</p>
+<p>CONFIG SET maxmemory-samples 10<br>1<br>5. Redis 缓存淘汰策略实战<br>假设我们有一个 Redis 实例，用来缓存用户的会话信息，并且只想缓存最新活跃的会话用户，同时确保 Redis 的内存不会超过 128MB，并使用 LRU 算法淘汰不活跃的会话：</p>
+<p>设置 Redis 的最大内存和 LRU 策略：</p>
+<p>CONFIG SET maxmemory 128mb<br>CONFIG SET maxmemory-policy allkeys-lru<br>1<br>2<br>向 Redis 写入会话数据，并设置过期时间：</p>
+<p>SET session:user:1001 “session_data” EX 3600  # 会话信息1小时过期<br>SET session:user:1002 “session_data” EX 3600<br>1<br>2<br>监控淘汰情况：<br>当 Redis 内存达到 128MB 时，Redis 将根据 LRU 算法自动淘汰最近最少使用的会话数据，以腾出空间。</p>
+<p>总结<br>在 Redis 中，缓存淘汰策略已经内置并且可以通过简单配置来启用。在选择合适的策略时，应该结合业务场景，例如如果业务中所有键都有过期时间，可以选择 volatile-lru 或 volatile-ttl，而如果没有过期时间且想控制整体缓存大小，可以选择 allkeys-lru 或 allkeys-random。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/15/java%E4%B8%ADAtomic%E5%8E%9F%E5%AD%90%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lzc">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lzc个人博客">
+      <meta itemprop="description" content="欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | lzc个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/10/15/java%E4%B8%ADAtomic%E5%8E%9F%E5%AD%90%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">java中Atomic原子类型</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-10-15 14:19:12 / 修改时间：14:19:52" itemprop="dateCreated datePublished" datetime="2024-10-15T14:19:12+08:00">2024-10-15</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>​</p>
+<h1 id="Java中atomic原子类型"><a href="#Java中atomic原子类型" class="headerlink" title="Java中atomic原子类型"></a>Java中atomic原子类型</h1><p>原子类型是 Java 中用于支持多线程并发编程的类型，属于 <code>java.util.concurrent.atomic</code> 包。原子类型提供了一种在多线程环境中执行线程安全操作的机制，它们通过底层硬件指令来实现原子操作（不可中断）。</p>
+<h2 id="常见的原子类型："><a href="#常见的原子类型：" class="headerlink" title="常见的原子类型："></a>常见的原子类型：</h2><ul>
+<li><p><code>AtomicBoolean</code></p>
+</li>
+<li><p><code>AtomicInteger</code></p>
+</li>
+<li><p><code>AtomicLong</code></p>
+</li>
+<li><p><code>AtomicReference&lt;T&gt;</code></p>
+</li>
+</ul>
+<h2 id="原子类型的特性："><a href="#原子类型的特性：" class="headerlink" title="原子类型的特性："></a>原子类型的特性：</h2><ul>
+<li>支持无锁的线程安全操作，避免使用 <code>synchronized</code> 或显式锁。</li>
+<li>提供了常见的原子操作，如 <code>get()</code>、<code>set()</code>、<code>compareAndSet()</code>、<code>incrementAndGet()</code> 等。</li>
+</ul>
+<h2 id="以AtomicInteger为例，解析原子类型的特性："><a href="#以AtomicInteger为例，解析原子类型的特性：" class="headerlink" title="以AtomicInteger为例，解析原子类型的特性："></a>以AtomicInteger为例，解析原子类型的特性：</h2><p>一些常见的 <code>AtomicInteger</code> 方法包括：</p>
+<ol>
+<li><code>get()</code>：获取当前值。</li>
+<li><code>set(int newValue)</code>：设置为指定值。</li>
+<li><code>getAndIncrement()</code>：先获取当前值，然后递增。</li>
+<li><code>incrementAndGet()</code>：先递增，然后获取当前值。</li>
+<li><code>compareAndSet(int expect, int update)</code>：如果当前值等于 <code>expect</code>，则将值设置为 <code>update</code>。</li>
+</ol>
+<p>参考源码可知：</p>
+<p>通过CAS无锁算法即Unsafe类中的compareAndSetInt方法实现原子性，保证数据修改时的线程安全。</p>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">import java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"></span><br><span class="line">public class AtomicIntegerExample &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        AtomicInteger atomicInteger = new AtomicInteger(0);</span><br><span class="line"></span><br><span class="line">        // 递增并获取值</span><br><span class="line">        System.out.println(atomicInteger.incrementAndGet()); // 输出 1</span><br><span class="line"></span><br><span class="line">        // 获取并递增值</span><br><span class="line">        System.out.println(atomicInteger.getAndIncrement()); // 输出 1, 但值已变为 2</span><br><span class="line"></span><br><span class="line">        // 比较并设置值</span><br><span class="line">        boolean result = atomicInteger.compareAndSet(2, 5);</span><br><span class="line">        System.out.println(result); // 输出 true，因为当前值是 2</span><br><span class="line">        System.out.println(atomicInteger.get()); // 输出 5</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动"></p>
+<p>通过 <code>AtomicInteger</code>，你可以避免使用 <code>synchronized</code> 关键字或手动管理锁，简化了多线程操作。</p>
+<p>​</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/15/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB%E5%8F%8A%E5%85%B6%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lzc">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lzc个人博客">
+      <meta itemprop="description" content="欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | lzc个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/10/15/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB%E5%8F%8A%E5%85%B6%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="post-title-link" itemprop="url">mysql数据库索引分类及其底层数据结构</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-10-15 14:17:49 / 修改时间：14:18:06" itemprop="dateCreated datePublished" datetime="2024-10-15T14:17:49+08:00">2024-10-15</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>数据库索引的分类和底层数据结构直接决定了它在不同场景下的性能和适用性。以下是数据库索引的主要分类及其底层数据结构的详细分析：</p>
+<h2 id="一、数据库索引的分类"><a href="#一、数据库索引的分类" class="headerlink" title="一、数据库索引的分类"></a>一、数据库索引的分类</h2><h3 id="1-主键索引（Primary-Key-Index）"><a href="#1-主键索引（Primary-Key-Index）" class="headerlink" title="1. 主键索引（Primary Key Index）"></a>1. <strong>主键索引（Primary Key Index）</strong></h3><ul>
+<li><strong>分类</strong>：唯一性索引的一种特殊形式。</li>
+<li><strong>特点</strong>：对主键列创建的索引，保证唯一性且不能为空。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="2-唯一索引（Unique-Index）"><a href="#2-唯一索引（Unique-Index）" class="headerlink" title="2. 唯一索引（Unique Index）"></a>2. <strong>唯一索引（Unique Index）</strong></h3><ul>
+<li><strong>分类</strong>：确保列中的值唯一，但可以包含空值。</li>
+<li><strong>特点</strong>：每个表可以有多个唯一索引，用于对独立列进行唯一性约束。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="3-普通索引（Non-Unique-Index）"><a href="#3-普通索引（Non-Unique-Index）" class="headerlink" title="3. 普通索引（Non-Unique Index）"></a>3. <strong>普通索引（Non-Unique Index）</strong></h3><ul>
+<li><strong>分类</strong>：不对列的唯一性做要求，最常见的索引类型。</li>
+<li><strong>特点</strong>：支持常规的查询加速，允许重复值。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="4-复合索引（Composite-Index）"><a href="#4-复合索引（Composite-Index）" class="headerlink" title="4. 复合索引（Composite Index）"></a>4. <strong>复合索引（Composite Index）</strong></h3><ul>
+<li><strong>分类</strong>：在多个列上创建的索引。</li>
+<li><strong>特点</strong>：按指定列顺序建立，遵循“最左前缀原则”。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="5-全文索引（Full-Text-Index）"><a href="#5-全文索引（Full-Text-Index）" class="headerlink" title="5. 全文索引（Full-Text Index）"></a>5. <strong>全文索引（Full-Text Index）</strong></h3><ul>
+<li><strong>分类</strong>：专门用于大文本字段搜索的索引。</li>
+<li><strong>特点</strong>：基于分词进行全文检索，支持复杂的文本查询。</li>
+<li><strong>底层结构</strong>：倒排索引（Inverted Index）。</li>
+</ul>
+<h3 id="6-空间索引（Spatial-Index）"><a href="#6-空间索引（Spatial-Index）" class="headerlink" title="6. 空间索引（Spatial Index）"></a>6. <strong>空间索引（Spatial Index）</strong></h3><ul>
+<li><strong>分类</strong>：用于地理空间数据（如坐标、地图位置）的索引。</li>
+<li><strong>特点</strong>：支持多维数据的范围查询。</li>
+<li><strong>底层结构</strong>：R树（R-Tree）。</li>
+</ul>
+<h3 id="7-聚集索引（Clustered-Index）"><a href="#7-聚集索引（Clustered-Index）" class="headerlink" title="7. 聚集索引（Clustered Index）"></a>7. <strong>聚集索引（Clustered Index）</strong></h3><ul>
+<li><strong>分类</strong>：索引顺序与物理存储顺序一致的索引。</li>
+<li><strong>特点</strong>：通常用于主键索引，每个表只能有一个聚集索引。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="8-非聚集索引（Non-Clustered-Index）"><a href="#8-非聚集索引（Non-Clustered-Index）" class="headerlink" title="8. 非聚集索引（Non-Clustered Index）"></a>8. <strong>非聚集索引（Non-Clustered Index）</strong></h3><ul>
+<li><strong>分类</strong>：索引顺序与物理存储顺序无关的索引。</li>
+<li><strong>特点</strong>：每个表可以有多个非聚集索引，独立于数据存储。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="9-哈希索引（Hash-Index）"><a href="#9-哈希索引（Hash-Index）" class="headerlink" title="9. 哈希索引（Hash Index）"></a>9. <strong>哈希索引（Hash Index）</strong></h3><ul>
+<li><strong>分类</strong>：基于哈希函数的索引。</li>
+<li><strong>特点</strong>：等值查询效率极高，但不支持范围查询。</li>
+<li><strong>底层结构</strong>：哈希表。</li>
+</ul>
+<h3 id="10-位图索引（Bitmap-Index）"><a href="#10-位图索引（Bitmap-Index）" class="headerlink" title="10. 位图索引（Bitmap Index）"></a>10. <strong>位图索引（Bitmap Index）</strong></h3><ul>
+<li><strong>分类</strong>：通过位图表示数据的索引。</li>
+<li><strong>特点</strong>：适合低基数列，适用于组合查询，但不适合频繁更新的场景。</li>
+<li><strong>底层结构</strong>：位图（Bitmap）。</li>
+</ul>
+<hr>
+<h2 id="二、数据库索引的底层数据结构"><a href="#二、数据库索引的底层数据结构" class="headerlink" title="二、数据库索引的底层数据结构"></a>二、数据库索引的底层数据结构</h2><h3 id="1-B-树（B-Tree）"><a href="#1-B-树（B-Tree）" class="headerlink" title="1. B+树（B+ Tree）"></a>1. <strong>B+树（B+ Tree）</strong></h3><ul>
+<li><strong>用途</strong>：最常用于主键索引、唯一索引、普通索引和复合索引。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>多路平衡树</strong>：节点包含多个键值，树高度低，磁盘I&#x2F;O次数少。</li>
+<li><strong>叶子节点链表</strong>：所有数据存储在叶子节点，并通过链表连接，支持范围查询。</li>
+<li><strong>顺序访问效率高</strong>：适合范围查询和排序操作。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-哈希表（Hash-Table）"><a href="#2-哈希表（Hash-Table）" class="headerlink" title="2. 哈希表（Hash Table）"></a>2. <strong>哈希表（Hash Table）</strong></h3><ul>
+<li><strong>用途</strong>：用于哈希索引，主要针对等值查询场景。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>哈希函数映射</strong>：通过哈希函数将键值映射到哈希表中的桶（bucket）。</li>
+<li><strong>不支持范围查询</strong>：哈希表只能快速处理等值查询，对于范围查询无效。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-倒排索引（Inverted-Index）"><a href="#3-倒排索引（Inverted-Index）" class="headerlink" title="3. 倒排索引（Inverted Index）"></a>3. <strong>倒排索引（Inverted Index）</strong></h3><ul>
+<li><strong>用途</strong>：主要用于全文索引。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>关键词映射</strong>：倒排索引将每个关键词映射到包含该关键词的文档或记录列表中。</li>
+<li><strong>分词处理</strong>：适用于大文本数据，通过词语的匹配加速查询。</li>
+<li><strong>高效全文搜索</strong>：特别适合搜索引擎和文本数据中的关键词查找。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-R树（R-Tree）"><a href="#4-R树（R-Tree）" class="headerlink" title="4. R树（R-Tree）"></a>4. <strong>R树（R-Tree）</strong></h3><ul>
+<li><strong>用途</strong>：用于空间索引，主要处理二维或多维的空间数据。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>范围查询</strong>：通过最小边界矩形（MBR，Minimum Bounding Rectangle）来划分空间数据，支持多维空间范围查询。</li>
+<li><strong>分层结构</strong>：R树的节点存储空间范围信息，非叶子节点存储矩形的边界范围，叶子节点存储数据位置。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-位图（Bitmap）"><a href="#5-位图（Bitmap）" class="headerlink" title="5. 位图（Bitmap）"></a>5. <strong>位图（Bitmap）</strong></h3><ul>
+<li><strong>用途</strong>：主要用于位图索引，适用于低基数（如性别、状态等）的列。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>位数组表示</strong>：使用位数组来表示数据的位置，适合数据重复较多的场景。</li>
+<li><strong>组合查询高效</strong>：多个位图可以进行按位操作（如 AND、OR 等），快速计算组合查询结果。</li>
+<li><strong>不适合频繁更新</strong>：因为每次修改需要更新整个位图，频繁更新时效率较低。</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-跳表（Skip-List）"><a href="#6-跳表（Skip-List）" class="headerlink" title="6. 跳表（Skip List）"></a>6. <strong>跳表（Skip List）</strong></h3><ul>
+<li><strong>用途</strong>：Redis等轻量级存储中常用的索引结构。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>多层链表结构</strong>：通过引入多层级指针，跳表能够实现接近于平衡树的查询效率。</li>
+<li><strong>范围查询</strong>：跳表支持快速的范围查找，且实现简单。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h3><ol>
+<li><strong>常见索引结构</strong>：B+树结构是大多数关系型数据库索引的主要实现方式，广泛应用于主键索引、唯一索引和普通索引。它支持快速的查找、插入、删除操作，且能够高效处理范围查询。</li>
+<li><strong>其他结构</strong>：哈希索引适用于等值查询，倒排索引适合全文搜索，R树则处理空间数据查询，而位图索引擅长组合查询但不适合频繁更新。</li>
+<li><strong>性能权衡</strong>：每种索引结构都有其特定的应用场景，合理选择合适的索引类型和结构可以显著提升数据库的查询性能，同时也要平衡插入、更新操作的开销。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -260,135 +676,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/15/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="lzc">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lzc个人博客">
-      <meta itemprop="description" content="欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | lzc个人博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/10/15/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-10-15 11:49:58 / 修改时间：13:56:53" itemprop="dateCreated datePublished" datetime="2024-10-15T11:49:58+08:00">2024-10-15</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">title:</span> <span class="string">redo</span> <span class="string">log和undo</span> <span class="string">log</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-10-15 13:55:26</span></span><br><span class="line"><span class="attr">tags:</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="搭建个人博客"><a href="#搭建个人博客" class="headerlink" title="搭建个人博客"></a>搭建个人博客</h1><p>使用 Hexo 搭建个人博客是一个很好的选择，Hexo 是一个基于 Node.js 的静态博客框架，它生成的静态页面非常适合部署到 GitHub Pages 等平台。以下是详细的步骤教学：</p>
-<h3 id="1-安装环境准备"><a href="#1-安装环境准备" class="headerlink" title="1. 安装环境准备"></a>1. 安装环境准备</h3><h4 id="1-1-安装-Node-js-和-npm"><a href="#1-1-安装-Node-js-和-npm" class="headerlink" title="1.1 安装 Node.js 和 npm"></a>1.1 安装 Node.js 和 npm</h4><p>Hexo 是基于 Node.js 的，所以首先需要安装 Node.js 和 npm（Node.js 自带 npm）。你可以通过以下步骤安装：</p>
-<ul>
-<li>进入 <a target="_blank" rel="noopener" href="https://nodejs.org/">Node.js 官网</a> 下载并安装最新的 LTS 版本。</li>
-</ul>
-<p>安装完成后，使用终端（或命令行）输入以下命令确认安装成功：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
-<h4 id="1-2-安装-Git"><a href="#1-2-安装-Git" class="headerlink" title="1.2 安装 Git"></a>1.2 安装 Git</h4><p>Hexo 使用 Git 来管理和部署博客，因此需要安装 Git。你可以通过以下链接安装：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://git-scm.com/">Git 下载链接</a></li>
-</ul>
-<p>安装完成后，确认安装：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git --version</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-安装-Hexo"><a href="#2-安装-Hexo" class="headerlink" title="2. 安装 Hexo"></a>2. 安装 Hexo</h3><p>安装 Hexo 非常简单，通过 npm 命令安装 Hexo CLI（命令行工具）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-初始化博客"><a href="#3-初始化博客" class="headerlink" title="3. 初始化博客"></a>3. 初始化博客</h3><p>选择一个空文件夹作为博客目录，然后在该文件夹中运行以下命令来初始化 Hexo 项目：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init &lt;blog_name&gt; <span class="comment"># &lt;blog_name&gt; 是你博客的名字</span></span><br><span class="line"><span class="built_in">cd</span> &lt;blog_name&gt;</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-
-<p>这会创建一个基本的 Hexo 项目结构。<code>npm install</code> 命令将安装必要的依赖。</p>
-<h3 id="4-生成和启动博客"><a href="#4-生成和启动博客" class="headerlink" title="4. 生成和启动博客"></a>4. 生成和启动博客</h3><p>生成静态页面并在本地运行 Hexo：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br><span class="line">hexo server</span><br></pre></td></tr></table></figure>
-
-<p>浏览器访问 <code>http://localhost:4000</code>，你就可以看到一个默认的 Hexo 博客页面。</p>
-<h3 id="5-配置-Hexo"><a href="#5-配置-Hexo" class="headerlink" title="5. 配置 Hexo"></a>5. 配置 Hexo</h3><h4 id="5-1-修改配置文件"><a href="#5-1-修改配置文件" class="headerlink" title="5.1 修改配置文件"></a>5.1 修改配置文件</h4><p>博客生成后，你可以在项目根目录找到 <code>_config.yml</code> 文件，这里包含了博客的全局配置。你可以根据自己的需求修改：</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">title:</span> <span class="string">你的博客标题</span></span><br><span class="line"><span class="attr">subtitle:</span> <span class="string">副标题</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">博客描述</span></span><br><span class="line"><span class="attr">author:</span> <span class="string">作者名</span></span><br><span class="line"><span class="attr">language:</span> <span class="string">zh-CN</span> <span class="comment"># 设置语言为中文</span></span><br><span class="line"><span class="attr">timezone:</span> <span class="string">Asia/Shanghai</span> <span class="comment"># 设置时区</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="5-2-选择主题"><a href="#5-2-选择主题" class="headerlink" title="5.2 选择主题"></a>5.2 选择主题</h4><p>Hexo 默认主题是 <code>landscape</code>，你可以从 Hexo 官方主题库（<a target="_blank" rel="noopener" href="https://hexo.io/themes/">主题库</a>）选择并更换主题。</p>
-<p>更换主题的步骤如下：</p>
-<ul>
-<li>下载并解压你喜欢的主题放入 <code>themes</code> 目录</li>
-<li>修改 <code>_config.yml</code> 中的 <code>theme</code> 字段为你下载的主题名称</li>
-</ul>
-<h3 id="6-部署到-GitHub-Pages"><a href="#6-部署到-GitHub-Pages" class="headerlink" title="6. 部署到 GitHub Pages"></a>6. 部署到 GitHub Pages</h3><p>Hexo 生成的博客是静态的，非常适合部署到 GitHub Pages。以下是部署的步骤：</p>
-<h4 id="6-1-创建-GitHub-仓库"><a href="#6-1-创建-GitHub-仓库" class="headerlink" title="6.1 创建 GitHub 仓库"></a>6.1 创建 GitHub 仓库</h4><p>前往 GitHub，创建一个名为 <code>&lt;username&gt;.github.io</code> 的仓库，<code>&lt;username&gt;</code> 是你的 GitHub 用户名。</p>
-<h4 id="6-2-安装部署插件"><a href="#6-2-安装部署插件" class="headerlink" title="6.2 安装部署插件"></a>6.2 安装部署插件</h4><p>Hexo 提供了一个 Git 部署插件，你需要安装它：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<h4 id="6-3-配置部署信息"><a href="#6-3-配置部署信息" class="headerlink" title="6.3 配置部署信息"></a>6.3 配置部署信息</h4><p>修改 <code>_config.yml</code> 文件，找到 <code>deploy</code> 部分，添加以下内容：</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">https://github.com/&lt;username&gt;/&lt;username&gt;.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span> <span class="comment"># GitHub Pages 使用的是 main 分支</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="6-4-部署博客"><a href="#6-4-部署博客" class="headerlink" title="6.4 部署博客"></a>6.4 部署博客</h4><p>每次更新博客后，你需要运行以下命令来生成静态页面并部署到 GitHub Pages：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
-
-<h3 id="7-撰写文章"><a href="#7-撰写文章" class="headerlink" title="7. 撰写文章"></a>7. 撰写文章</h3><p>在 <code>source/_posts</code> 目录中可以创建 Markdown 文件撰写博客文章。新建文章的命令如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="string">&quot;文章标题&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>生成的文章文件会在 <code>source/_posts/</code> 目录下，你可以使用 Markdown 语法来撰写文章。</p>
-<p>撰写完文章后，通过以下命令重新生成并部署：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
-
-<h3 id="8-其他优化"><a href="#8-其他优化" class="headerlink" title="8. 其他优化"></a>8. 其他优化</h3><ul>
-<li><strong>SEO</strong>：在 <code>_config.yml</code> 文件中配置 meta 信息，添加描述和关键词有助于搜索引擎优化。</li>
-<li><strong>自定义域名</strong>：如果你有自己的域名，可以在 GitHub Pages 上绑定自定义域名，只需在仓库中创建一个 <code>CNAME</code> 文件，内容填写你的域名。</li>
-</ul>
-<p>完成这些步骤后，你的 Hexo 博客就成功搭建并上线了！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
 
 </div>
   </main>
@@ -404,7 +691,7 @@
     </span>
     <span class="author" itemprop="copyrightHolder">lzc</span>
   </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
     </div>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="数据库索引的分类和底层数据结构直接决定了它在不同场景下的性能和适用性。以下是数据库索引的主要分类及其底层数据结构的详细分析： 一、数据库索引的分类1. 主键索引（Primary Key Index） 分类：唯一性索引的一种特殊形式。 特点：对主键列创建的索引，保证唯一性且不能为空。 底层结构：B+树。  2. 唯一索引（Unique Index） 分类：确保列中的值唯一，但可以包含空值。 特点：每">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql数据库索引分类及其底层数据结构">
+<meta property="og:url" content="http://example.com/2024/10/15/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB%E5%8F%8A%E5%85%B6%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:site_name" content="lzc个人博客">
+<meta property="og:description" content="数据库索引的分类和底层数据结构直接决定了它在不同场景下的性能和适用性。以下是数据库索引的主要分类及其底层数据结构的详细分析： 一、数据库索引的分类1. 主键索引（Primary Key Index） 分类：唯一性索引的一种特殊形式。 特点：对主键列创建的索引，保证唯一性且不能为空。 底层结构：B+树。  2. 唯一索引（Unique Index） 分类：确保列中的值唯一，但可以包含空值。 特点：每">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-15T06:17:49.000Z">
+<meta property="article:modified_time" content="2024-10-15T06:18:06.303Z">
+<meta property="article:author" content="lzc">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/10/15/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB%E5%8F%8A%E5%85%B6%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2024/10/15/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB%E5%8F%8A%E5%85%B6%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/","path":"2024/10/15/mysql数据库索引分类及其底层数据结构/","title":"mysql数据库索引分类及其底层数据结构"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>mysql数据库索引分类及其底层数据结构 | lzc个人博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">lzc个人博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">lzc</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">一、数据库索引的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95%EF%BC%88Primary-Key-Index%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">1. 主键索引（Primary Key Index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%EF%BC%88Unique-Index%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">2. 唯一索引（Unique Index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%99%AE%E9%80%9A%E7%B4%A2%E5%BC%95%EF%BC%88Non-Unique-Index%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">3. 普通索引（Non-Unique Index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%A4%8D%E5%90%88%E7%B4%A2%E5%BC%95%EF%BC%88Composite-Index%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">4. 复合索引（Composite Index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95%EF%BC%88Full-Text-Index%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">5. 全文索引（Full-Text Index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%A9%BA%E9%97%B4%E7%B4%A2%E5%BC%95%EF%BC%88Spatial-Index%EF%BC%89"><span class="nav-number">1.6.</span> <span class="nav-text">6. 空间索引（Spatial Index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%EF%BC%88Clustered-Index%EF%BC%89"><span class="nav-number">1.7.</span> <span class="nav-text">7. 聚集索引（Clustered Index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E9%9D%9E%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%EF%BC%88Non-Clustered-Index%EF%BC%89"><span class="nav-number">1.8.</span> <span class="nav-text">8. 非聚集索引（Non-Clustered Index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%EF%BC%88Hash-Index%EF%BC%89"><span class="nav-number">1.9.</span> <span class="nav-text">9. 哈希索引（Hash Index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E4%BD%8D%E5%9B%BE%E7%B4%A2%E5%BC%95%EF%BC%88Bitmap-Index%EF%BC%89"><span class="nav-number">1.10.</span> <span class="nav-text">10. 位图索引（Bitmap Index）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E7%9A%84%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">二、数据库索引的底层数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-B-%E6%A0%91%EF%BC%88B-Tree%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">1. B+树（B+ Tree）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%93%88%E5%B8%8C%E8%A1%A8%EF%BC%88Hash-Table%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2. 哈希表（Hash Table）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95%EF%BC%88Inverted-Index%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">3. 倒排索引（Inverted Index）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-R%E6%A0%91%EF%BC%88R-Tree%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">4. R树（R-Tree）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E4%BD%8D%E5%9B%BE%EF%BC%88Bitmap%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">5. 位图（Bitmap）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E8%B7%B3%E8%A1%A8%EF%BC%88Skip-List%EF%BC%89"><span class="nav-number">2.6.</span> <span class="nav-text">6. 跳表（Skip List）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">2.7.</span> <span class="nav-text">三、总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lzc</p>
+  <div class="site-description" itemprop="description">欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/15/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB%E5%8F%8A%E5%85%B6%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lzc">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lzc个人博客">
+      <meta itemprop="description" content="欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="mysql数据库索引分类及其底层数据结构 | lzc个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          mysql数据库索引分类及其底层数据结构
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-10-15 14:17:49 / 修改时间：14:18:06" itemprop="dateCreated datePublished" datetime="2024-10-15T14:17:49+08:00">2024-10-15</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>数据库索引的分类和底层数据结构直接决定了它在不同场景下的性能和适用性。以下是数据库索引的主要分类及其底层数据结构的详细分析：</p>
+<h2 id="一、数据库索引的分类"><a href="#一、数据库索引的分类" class="headerlink" title="一、数据库索引的分类"></a>一、数据库索引的分类</h2><h3 id="1-主键索引（Primary-Key-Index）"><a href="#1-主键索引（Primary-Key-Index）" class="headerlink" title="1. 主键索引（Primary Key Index）"></a>1. <strong>主键索引（Primary Key Index）</strong></h3><ul>
+<li><strong>分类</strong>：唯一性索引的一种特殊形式。</li>
+<li><strong>特点</strong>：对主键列创建的索引，保证唯一性且不能为空。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="2-唯一索引（Unique-Index）"><a href="#2-唯一索引（Unique-Index）" class="headerlink" title="2. 唯一索引（Unique Index）"></a>2. <strong>唯一索引（Unique Index）</strong></h3><ul>
+<li><strong>分类</strong>：确保列中的值唯一，但可以包含空值。</li>
+<li><strong>特点</strong>：每个表可以有多个唯一索引，用于对独立列进行唯一性约束。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="3-普通索引（Non-Unique-Index）"><a href="#3-普通索引（Non-Unique-Index）" class="headerlink" title="3. 普通索引（Non-Unique Index）"></a>3. <strong>普通索引（Non-Unique Index）</strong></h3><ul>
+<li><strong>分类</strong>：不对列的唯一性做要求，最常见的索引类型。</li>
+<li><strong>特点</strong>：支持常规的查询加速，允许重复值。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="4-复合索引（Composite-Index）"><a href="#4-复合索引（Composite-Index）" class="headerlink" title="4. 复合索引（Composite Index）"></a>4. <strong>复合索引（Composite Index）</strong></h3><ul>
+<li><strong>分类</strong>：在多个列上创建的索引。</li>
+<li><strong>特点</strong>：按指定列顺序建立，遵循“最左前缀原则”。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="5-全文索引（Full-Text-Index）"><a href="#5-全文索引（Full-Text-Index）" class="headerlink" title="5. 全文索引（Full-Text Index）"></a>5. <strong>全文索引（Full-Text Index）</strong></h3><ul>
+<li><strong>分类</strong>：专门用于大文本字段搜索的索引。</li>
+<li><strong>特点</strong>：基于分词进行全文检索，支持复杂的文本查询。</li>
+<li><strong>底层结构</strong>：倒排索引（Inverted Index）。</li>
+</ul>
+<h3 id="6-空间索引（Spatial-Index）"><a href="#6-空间索引（Spatial-Index）" class="headerlink" title="6. 空间索引（Spatial Index）"></a>6. <strong>空间索引（Spatial Index）</strong></h3><ul>
+<li><strong>分类</strong>：用于地理空间数据（如坐标、地图位置）的索引。</li>
+<li><strong>特点</strong>：支持多维数据的范围查询。</li>
+<li><strong>底层结构</strong>：R树（R-Tree）。</li>
+</ul>
+<h3 id="7-聚集索引（Clustered-Index）"><a href="#7-聚集索引（Clustered-Index）" class="headerlink" title="7. 聚集索引（Clustered Index）"></a>7. <strong>聚集索引（Clustered Index）</strong></h3><ul>
+<li><strong>分类</strong>：索引顺序与物理存储顺序一致的索引。</li>
+<li><strong>特点</strong>：通常用于主键索引，每个表只能有一个聚集索引。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="8-非聚集索引（Non-Clustered-Index）"><a href="#8-非聚集索引（Non-Clustered-Index）" class="headerlink" title="8. 非聚集索引（Non-Clustered Index）"></a>8. <strong>非聚集索引（Non-Clustered Index）</strong></h3><ul>
+<li><strong>分类</strong>：索引顺序与物理存储顺序无关的索引。</li>
+<li><strong>特点</strong>：每个表可以有多个非聚集索引，独立于数据存储。</li>
+<li><strong>底层结构</strong>：B+树。</li>
+</ul>
+<h3 id="9-哈希索引（Hash-Index）"><a href="#9-哈希索引（Hash-Index）" class="headerlink" title="9. 哈希索引（Hash Index）"></a>9. <strong>哈希索引（Hash Index）</strong></h3><ul>
+<li><strong>分类</strong>：基于哈希函数的索引。</li>
+<li><strong>特点</strong>：等值查询效率极高，但不支持范围查询。</li>
+<li><strong>底层结构</strong>：哈希表。</li>
+</ul>
+<h3 id="10-位图索引（Bitmap-Index）"><a href="#10-位图索引（Bitmap-Index）" class="headerlink" title="10. 位图索引（Bitmap Index）"></a>10. <strong>位图索引（Bitmap Index）</strong></h3><ul>
+<li><strong>分类</strong>：通过位图表示数据的索引。</li>
+<li><strong>特点</strong>：适合低基数列，适用于组合查询，但不适合频繁更新的场景。</li>
+<li><strong>底层结构</strong>：位图（Bitmap）。</li>
+</ul>
+<hr>
+<h2 id="二、数据库索引的底层数据结构"><a href="#二、数据库索引的底层数据结构" class="headerlink" title="二、数据库索引的底层数据结构"></a>二、数据库索引的底层数据结构</h2><h3 id="1-B-树（B-Tree）"><a href="#1-B-树（B-Tree）" class="headerlink" title="1. B+树（B+ Tree）"></a>1. <strong>B+树（B+ Tree）</strong></h3><ul>
+<li><strong>用途</strong>：最常用于主键索引、唯一索引、普通索引和复合索引。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>多路平衡树</strong>：节点包含多个键值，树高度低，磁盘I&#x2F;O次数少。</li>
+<li><strong>叶子节点链表</strong>：所有数据存储在叶子节点，并通过链表连接，支持范围查询。</li>
+<li><strong>顺序访问效率高</strong>：适合范围查询和排序操作。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-哈希表（Hash-Table）"><a href="#2-哈希表（Hash-Table）" class="headerlink" title="2. 哈希表（Hash Table）"></a>2. <strong>哈希表（Hash Table）</strong></h3><ul>
+<li><strong>用途</strong>：用于哈希索引，主要针对等值查询场景。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>哈希函数映射</strong>：通过哈希函数将键值映射到哈希表中的桶（bucket）。</li>
+<li><strong>不支持范围查询</strong>：哈希表只能快速处理等值查询，对于范围查询无效。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-倒排索引（Inverted-Index）"><a href="#3-倒排索引（Inverted-Index）" class="headerlink" title="3. 倒排索引（Inverted Index）"></a>3. <strong>倒排索引（Inverted Index）</strong></h3><ul>
+<li><strong>用途</strong>：主要用于全文索引。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>关键词映射</strong>：倒排索引将每个关键词映射到包含该关键词的文档或记录列表中。</li>
+<li><strong>分词处理</strong>：适用于大文本数据，通过词语的匹配加速查询。</li>
+<li><strong>高效全文搜索</strong>：特别适合搜索引擎和文本数据中的关键词查找。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-R树（R-Tree）"><a href="#4-R树（R-Tree）" class="headerlink" title="4. R树（R-Tree）"></a>4. <strong>R树（R-Tree）</strong></h3><ul>
+<li><strong>用途</strong>：用于空间索引，主要处理二维或多维的空间数据。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>范围查询</strong>：通过最小边界矩形（MBR，Minimum Bounding Rectangle）来划分空间数据，支持多维空间范围查询。</li>
+<li><strong>分层结构</strong>：R树的节点存储空间范围信息，非叶子节点存储矩形的边界范围，叶子节点存储数据位置。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-位图（Bitmap）"><a href="#5-位图（Bitmap）" class="headerlink" title="5. 位图（Bitmap）"></a>5. <strong>位图（Bitmap）</strong></h3><ul>
+<li><strong>用途</strong>：主要用于位图索引，适用于低基数（如性别、状态等）的列。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>位数组表示</strong>：使用位数组来表示数据的位置，适合数据重复较多的场景。</li>
+<li><strong>组合查询高效</strong>：多个位图可以进行按位操作（如 AND、OR 等），快速计算组合查询结果。</li>
+<li><strong>不适合频繁更新</strong>：因为每次修改需要更新整个位图，频繁更新时效率较低。</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-跳表（Skip-List）"><a href="#6-跳表（Skip-List）" class="headerlink" title="6. 跳表（Skip List）"></a>6. <strong>跳表（Skip List）</strong></h3><ul>
+<li><strong>用途</strong>：Redis等轻量级存储中常用的索引结构。</li>
+<li><strong>结构特点</strong>：<ul>
+<li><strong>多层链表结构</strong>：通过引入多层级指针，跳表能够实现接近于平衡树的查询效率。</li>
+<li><strong>范围查询</strong>：跳表支持快速的范围查找，且实现简单。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h3><ol>
+<li><strong>常见索引结构</strong>：B+树结构是大多数关系型数据库索引的主要实现方式，广泛应用于主键索引、唯一索引和普通索引。它支持快速的查找、插入、删除操作，且能够高效处理范围查询。</li>
+<li><strong>其他结构</strong>：哈希索引适用于等值查询，倒排索引适合全文搜索，R树则处理空间数据查询，而位图索引擅长组合查询但不适合频繁更新。</li>
+<li><strong>性能权衡</strong>：每种索引结构都有其特定的应用场景，合理选择合适的索引类型和结构可以显著提升数据库的查询性能，同时也要平衡插入、更新操作的开销。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/15/redo-log%E5%92%8Cundo-log/" rel="prev" title="redo log和undo log">
+                  <i class="fa fa-angle-left"></i> redo log和undo log
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/10/15/java%E4%B8%ADAtomic%E5%8E%9F%E5%AD%90%E7%B1%BB%E5%9E%8B/" rel="next" title="java中Atomic原子类型">
+                  java中Atomic原子类型 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">lzc</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
