@@ -142,7 +142,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/15/redolog%E5%92%8Cundolog/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/15/redo-log%E5%92%8Cundo-log/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -160,7 +160,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/10/15/redolog%E5%92%8Cundolog/" class="post-title-link" itemprop="url">未命名</a>
+          <a href="/2024/10/15/redo-log%E5%92%8Cundo-log/" class="post-title-link" itemprop="url">redo log和undo log</a>
         </h2>
 
         <div class="post-meta-container">
@@ -172,7 +172,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2024-10-15 13:42:41 / 修改时间：13:45:22" itemprop="dateCreated datePublished" datetime="2024-10-15T13:42:41+08:00">2024-10-15</time>
+      <time title="创建时间：2024-10-15 13:55:26 / 修改时间：13:56:55" itemprop="dateCreated datePublished" datetime="2024-10-15T13:55:26+08:00">2024-10-15</time>
     </span>
 
   
@@ -185,63 +185,63 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="1-redo-log"><a href="#1-redo-log" class="headerlink" title="1.redo log:"></a>1.redo log:</h1><p>Redo Log �����ݿ�ϵͳ�������� MySQL �� InnoDB �洢���棩������ʵ������־��Ե���Ҫ���ơ�����¼����������ݿ��������޸ģ�ȷ����ʹ���ݿⷢ��������������ύ��Ȼ���ᶪʧ��</p>
-<h2 id="Redo-Log-�L���ԭ����"><a href="#Redo-Log-�L���ԭ����" class="headerlink" title="Redo Log �Ĺ���ԭ����"></a>Redo Log �Ĺ���ԭ����</h2><ol>
-<li><p>����ʼ��<br>������ִ�п�ʼʱ���κζ����ݵ��޸Ķ�����д�� redo log��������ֱ��д������е�����ҳ��</p>
+          <h1 id="1-redo-log"><a href="#1-redo-log" class="headerlink" title="1.redo log:"></a>1.redo log:</h1><p>Redo Log 是数据库系统（尤其是 MySQL 的 InnoDB 存储引擎）中用于实现事务持久性的重要机制。它记录了事务对数据库所做的修改，确保即使数据库发生崩溃，事务的提交仍然不会丢失。</p>
+<h2 id="Redo-Log-的工作原理："><a href="#Redo-Log-的工作原理：" class="headerlink" title="Redo Log 的工作原理："></a>Redo Log 的工作原理：</h2><ol>
+<li><p>事务开始：<br>当事务执行开始时，任何对数据的修改都会先写入 redo log，而不是直接写入磁盘中的数据页。</p>
 </li>
-<li><p>д���ڴ棺<br>�޸ĵ��������Ȼ�д���ڴ��еĻ���أ������ڴ��и�������ҳ��ͬʱ��¼����޸ĵĲ����� redo log �������С�</p>
+<li><p>写入内存：<br>修改的数据首先会写入内存中的缓冲池，并在内存中更新数据页，同时记录这次修改的操作到 redo log 缓冲区中。</p>
 </li>
-<li><p>д����̣������ύʱ��InnoDB �Ὣ redo log �����������ݳ־û��������е� redo log �ļ��У�����Ԥд��־��ԭ��WAL��Write-Ahead Logging����ȷ����ʹϵͳ�������Կ���ͨ�� redo log �ָ�����</p>
+<li><p>写入磁盘：事务提交时，InnoDB 会将 redo log 缓冲区的内容持久化到磁盘中的 redo log 文件中（即“预写日志”原则，WAL，Write-Ahead Logging），确保即使系统崩溃，仍可以通过 redo log 恢复事务。</p>
 </li>
-<li><p>����ˢ����̣�����ҳ��ʵ��ˢ�̲����������ڴ��е�����ҳ�־û������̣�������Ҫ������ɣ����ݿ�����ӳٽ�����ˢ����̡�����ζ�� redo log �ܹ���֤���ݵ������ԣ���ʹ����ҳ��û����ȫд����̡�</p>
+<li><p>数据刷入磁盘：数据页的实际刷盘操作（即将内存中的数据页持久化到磁盘）并不需要立刻完成，数据库可以延迟将数据刷入磁盘。这意味着 redo log 能够保证数据的完整性，即使数据页还没有完全写入磁盘。</p>
 </li>
-<li><p>�����ָ���������ݿⷢ�����ϣ�InnoDB ��������ʱͨ�� redo log ���б����ָ���������� redo log �����ݣ������������ύ����δд����̵������޸ģ�ȷ�����ݵ�һ���ԡ�</p>
-</li>
-</ol>
-<h2 id="Redo-Log-�����ԣ�"><a href="#Redo-Log-�����ԣ�" class="headerlink" title="Redo Log �����ԣ�"></a>Redo Log �����ԣ�</h2><ul>
-<li><p>ѭ��д��InnoDB ʹ�õ��ǹ̶���С�� redo log �ļ����������һ��ѭ����־��circular log������д���󣬻��ͷ�����������־��</p>
-</li>
-<li><p>�־��Ա�֤��ͨ�� redo log ���ƣ���ʹ���ݿ���ֱ��������ύ������Ҳ��������ʱ�õ��ָ���</p>
-</li>
-<li><p>Ч����������Ϊ redo log ��˳��д��Ĳ�����������д����Ч�ʸ��ߡ�</p>
-<h3 id="Redo-Log-��-Binlog-������"><a href="#Redo-Log-��-Binlog-������" class="headerlink" title="Redo Log �� Binlog ������"></a>Redo Log �� Binlog ������</h3></li>
-<li><p>Redo Log���ɴ洢���棨�� InnoDB�����ɣ���¼���ݵ������޸ģ����ڱ����ָ���</p>
-</li>
-<li><p>Binlog���� MySQL Server ���ɣ���¼�߼� SQL �������������Ӹ��ƺ����ݿ�ָ���<br>ͨ�� redo log�����ݿ��ܹ�ʵ������ĳ־��ԣ�Durability������ʹ�������жϻ����������£����ύ���������ܱ��ָ���</p>
-<h1 id="2-undo-log"><a href="#2-undo-log" class="headerlink" title="2.undo log:"></a>2.undo log:</h1><p>Undo Log �����ݿ�ϵͳ���� MySQL �� InnoDB �洢���棩������ʵ������ع���<strong>��汾�������ƣ�MVCC��</strong>����Ҫ���ơ�����¼��������ִ�й������������޸�֮ǰ�����ݿ��գ��Ӷ�֧������Ļع��Լ��ṩһ�µĶ���ͼ��</p>
-</li>
-</ul>
-<h2 id="Undo-Log-�L���ԭ����"><a href="#Undo-Log-�L���ԭ����" class="headerlink" title="Undo Log �Ĺ���ԭ����"></a>Undo Log �Ĺ���ԭ����</h2><ol>
-<li><p>����ʼ���������޸�����ʱ��InnoDB �Ὣ�޸�ǰ�ľ����ݣ���ԭʼ���ݣ���¼�� Undo Log �У��Ա�������ع�ʱ�ָ�ԭʼ״̬��</p>
-</li>
-<li><p>�ع��������������ִ�й����з������������ִ�лع����������ݿ��ʹ�� Undo Log �����ݻָ����޸�ǰ��״̬���Ӷ�������������ݿ��Ӱ�졣</p>
-</li>
-<li><p>��汾�������ƣ�MVCC�����ڲ��������У�δ�ύ�����������ݽ����޸ģ�������������Ҫ��ȡһ�µ����ݿ��ա�����������£����ݿ����ͨ�� Undo Log �ṩ�޸�ǰ�����ݰ汾���Ӷ�ʵ�ֿ��ն��������ȡ��δ�ύ�����ݡ���������������ڲ�����������£�����һ������ͼ�����ݡ�</p>
+<li><p>崩溃恢复：如果数据库发生故障，InnoDB 会在重启时通过 redo log 进行崩溃恢复。它会根据 redo log 的内容，重做所有已提交但尚未写入磁盘的数据修改，确保数据的一致性。</p>
 </li>
 </ol>
-<h2 id="Undo-Log-�����ԣ�"><a href="#Undo-Log-�����ԣ�" class="headerlink" title="Undo Log �����ԣ�"></a>Undo Log �����ԣ�</h2><ul>
-<li><p>���ڻع���Undo Log ������������޸�ǰ�ľ�ֵ����˿����ڻع�ʱʹ����Щ��ֵ�ָ����ݿ�ԭ����״̬�����������������ع���������ϵͳ���������Ļع���Undo Log ����ȷ�����ݻָ�������֮ǰ��״̬��</p>
+<h2 id="Redo-Log-的特性："><a href="#Redo-Log-的特性：" class="headerlink" title="Redo Log 的特性："></a>Redo Log 的特性：</h2><ul>
+<li><p>循环写：InnoDB 使用的是固定大小的 redo log 文件，它们组成一个循环日志（circular log）。当写满后，会回头覆盖最早的日志。</p>
 </li>
-<li><p>֧�� MVCC����汾�������ƣ�MVCC������ Undo Log ������ά��������ݰ汾��ͨ�� Undo Log�����ݿ����Ϊ��ͬ�������ṩ��ͬ����ʷ�汾���ݣ��Ӷ�ʵ�ַ�������������</p>
+<li><p>持久性保证：通过 redo log 机制，即使数据库出现崩溃，已提交的事务也能在重启时得到恢复。</p>
 </li>
-<li><p>�洢��ʽ��Undo Log ��¼�����ݲ�����ֱ�Ӵ洢�ڶ������ļ��У����Ǵ����ϵͳ���ռ䣨System Tablespace�����߶����� undo ���ռ��С�</p>
+<li><p>效率提升：因为 redo log 是顺序写入的操作，相比随机写磁盘效率更高。</p>
+<h3 id="Redo-Log-与-Binlog-的区别："><a href="#Redo-Log-与-Binlog-的区别：" class="headerlink" title="Redo Log 与 Binlog 的区别："></a>Redo Log 与 Binlog 的区别：</h3></li>
+<li><p>Redo Log：由存储引擎（如 InnoDB）生成，记录数据的物理修改，用于崩溃恢复。</p>
 </li>
-<li><p>ɾ���ӳ٣��������޸����ݲ��ύʱ����Щ�޸Ŀ��ܻḲ�Ǿ����ݡ�Ȼ�������ݿⲢ��������ɾ�� Undo Log���ر���������������������Щ�ɰ汾����ʱ��ֻ�е�û��������Ҫʹ�þɰ汾����ʱ��Undo Log �Żᱻ���ա�</p>
+<li><p>Binlog：由 MySQL Server 生成，记录逻辑 SQL 操作，用于主从复制和数据库恢复。<br>通过 redo log，数据库能够实现事务的持久性（Durability），即使在意外中断或崩溃的情况下，已提交的事务仍能被恢复。</p>
+<h1 id="2-undo-log"><a href="#2-undo-log" class="headerlink" title="2.undo log:"></a>2.undo log:</h1><p>Undo Log 是数据库系统（如 MySQL 的 InnoDB 存储引擎）中用于实现事务回滚和<strong>多版本并发控制（MVCC）</strong>的重要机制。它记录了事务在执行过程中所做的修改之前的数据快照，从而支持事务的回滚以及提供一致的读视图。</p>
 </li>
 </ul>
-<h2 id="Undo-Log-��-Redo-Log-������"><a href="#Undo-Log-��-Redo-Log-������" class="headerlink" title="Undo Log �� Redo Log ������"></a>Undo Log �� Redo Log ������</h2><ul>
-<li><p>Undo Log����¼���������޸�֮ǰ�����ݣ�����֧������ع��� MVCC��</p>
+<h2 id="Undo-Log-的工作原理："><a href="#Undo-Log-的工作原理：" class="headerlink" title="Undo Log 的工作原理："></a>Undo Log 的工作原理：</h2><ol>
+<li><p>事务开始：当事务修改数据时，InnoDB 会将修改前的旧数据（即原始数据）记录到 Undo Log 中，以便在事务回滚时恢复原始状态。</p>
 </li>
-<li><p>Redo Log����¼���������޸ĺ�����ݣ����ڱ����ָ��ͳ־û���</p>
-<h2 id="Undo-Log-�����a�"><a href="#Undo-Log-�����a�" class="headerlink" title="Undo Log �����ã�"></a>Undo Log �����ã�</h2></li>
+<li><p>回滚操作：如果事务执行过程中发生错误或主动执行回滚操作，数据库会使用 Undo Log 将数据恢复到修改前的状态，从而撤销事务对数据库的影响。</p>
+</li>
+<li><p>多版本并发控制（MVCC）：在并发控制中，未提交的事务会对数据进行修改，而其他事务需要读取一致的数据快照。在这种情况下，数据库可以通过 Undo Log 提供修改前的数据版本，从而实现快照读，避免读取到未提交的数据。这样，事务可以在不加锁的情况下，读到一致性视图的数据。</p>
+</li>
+</ol>
+<h2 id="Undo-Log-的特性："><a href="#Undo-Log-的特性：" class="headerlink" title="Undo Log 的特性："></a>Undo Log 的特性：</h2><ul>
+<li><p>用于回滚：Undo Log 保存的是事务修改前的旧值，因此可以在回滚时使用这些旧值恢复数据库原来的状态。无论事务是主动回滚还是由于系统故障引发的回滚，Undo Log 都能确保数据恢复到事务之前的状态。</p>
+</li>
+<li><p>支持 MVCC：多版本并发控制（MVCC）依赖 Undo Log 机制来维护多个数据版本。通过 Undo Log，数据库可以为不同的事务提供不同的历史版本数据，从而实现非阻塞读操作。</p>
+</li>
+<li><p>存储方式：Undo Log 记录的数据并不会直接存储在独立的文件中，而是存放在系统表空间（System Tablespace）或者独立的 undo 表空间中。</p>
+</li>
+<li><p>删除延迟：当事务修改数据并提交时，这些修改可能会覆盖旧数据。然而，数据库并不会立即删除 Undo Log，特别是在有其他事务依赖这些旧版本数据时。只有当没有事务需要使用旧版本数据时，Undo Log 才会被回收。</p>
+</li>
+</ul>
+<h2 id="Undo-Log-与-Redo-Log-的区别："><a href="#Undo-Log-与-Redo-Log-的区别：" class="headerlink" title="Undo Log 与 Redo Log 的区别："></a>Undo Log 与 Redo Log 的区别：</h2><ul>
+<li><p>Undo Log：记录的是事务修改之前的数据，用于支持事务回滚和 MVCC。</p>
+</li>
+<li><p>Redo Log：记录的是事务修改后的数据，用于崩溃恢复和持久化。</p>
+<h2 id="Undo-Log-的作用："><a href="#Undo-Log-的作用：" class="headerlink" title="Undo Log 的作用："></a>Undo Log 的作用：</h2></li>
 </ul>
 <ol>
-<li><p>�ع����񣺵�������������ж�ʱ��Undo Log ���ڳ�������������޸ģ�ȷ�����ݿ��һ���ԡ�</p>
+<li><p>回滚事务：当事务发生错误或中断时，Undo Log 用于撤销事务的所有修改，确保数据库的一致性。</p>
 </li>
-<li><p>���ն���Snapshot Read������ MVCC �У����ݿ�ʹ�� Undo Log �ṩ��ʷ���ݵĿ��գ�ȷ����������������δ�ύ�����Ӱ�죬ʵ��һ���Զ���</p>
+<li><p>快照读（Snapshot Read）：在 MVCC 中，数据库使用 Undo Log 提供历史数据的快照，确保读操作不受其他未提交事务的影响，实现一致性读。</p>
 </li>
 </ol>
-<p>��֮��Undo Log �����ݿ�����Ҫ�����ṩ����Ļع�������֧��һ���Զ��������ڲ��������£�ͨ�� Undo Log �������ݵĶ���汾��ʹ�������ڶ�дʱ�ܹ��໥����������˲������ܡ�</p>
+<p>总之，Undo Log 在数据库中主要用于提供事务的回滚能力和支持一致性读，尤其在并发场景下，通过 Undo Log 保持数据的多个版本，使得事务在读写时能够相互独立，提高了并发性能。</p>
 
       
     </div>
@@ -298,7 +298,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2024-10-15 11:49:58 / 修改时间：13:40:48" itemprop="dateCreated datePublished" datetime="2024-10-15T11:49:58+08:00">2024-10-15</time>
+      <time title="创建时间：2024-10-15 11:49:58 / 修改时间：13:56:53" itemprop="dateCreated datePublished" datetime="2024-10-15T11:49:58+08:00">2024-10-15</time>
     </span>
 
   
@@ -311,7 +311,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="搭建个人博客"><a href="#搭建个人博客" class="headerlink" title="搭建个人博客"></a>搭建个人博客</h1><p>使用 Hexo 搭建个人博客是一个很好的选择，Hexo 是一个基于 Node.js 的静态博客框架，它生成的静态页面非常适合部署到 GitHub Pages 等平台。以下是详细的步骤教学：</p>
+          <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">title:</span> <span class="string">redo</span> <span class="string">log和undo</span> <span class="string">log</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2024-10-15 13:55:26</span></span><br><span class="line"><span class="attr">tags:</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="搭建个人博客"><a href="#搭建个人博客" class="headerlink" title="搭建个人博客"></a>搭建个人博客</h1><p>使用 Hexo 搭建个人博客是一个很好的选择，Hexo 是一个基于 Node.js 的静态博客框架，它生成的静态页面非常适合部署到 GitHub Pages 等平台。以下是详细的步骤教学：</p>
 <h3 id="1-安装环境准备"><a href="#1-安装环境准备" class="headerlink" title="1. 安装环境准备"></a>1. 安装环境准备</h3><h4 id="1-1-安装-Node-js-和-npm"><a href="#1-1-安装-Node-js-和-npm" class="headerlink" title="1.1 安装 Node.js 和 npm"></a>1.1 安装 Node.js 和 npm</h4><p>Hexo 是基于 Node.js 的，所以首先需要安装 Node.js 和 npm（Node.js 自带 npm）。你可以通过以下步骤安装：</p>
 <ul>
 <li>进入 <a target="_blank" rel="noopener" href="https://nodejs.org/">Node.js 官网</a> 下载并安装最新的 LTS 版本。</li>
