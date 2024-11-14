@@ -123,7 +123,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -158,6 +158,83 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/11/14/%E5%B7%A5%E5%8E%82-%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%A8%A1%E5%BC%8F%E8%AE%BE%E8%AE%A1nodeHandler/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lzc">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lzc个人博客">
+      <meta itemprop="description" content="欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | lzc个人博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/11/14/%E5%B7%A5%E5%8E%82-%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%A8%A1%E5%BC%8F%E8%AE%BE%E8%AE%A1nodeHandler/" class="post-title-link" itemprop="url">工厂+注册表模式设计nodeHandler</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-11-14 21:09:17 / 修改时间：21:09:47" itemprop="dateCreated datePublished" datetime="2024-11-14T21:09:17+08:00">2024-11-14</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="工厂-注册表模式获取nodeHandler"><a href="#工厂-注册表模式获取nodeHandler" class="headerlink" title="工厂+注册表模式获取nodeHandler"></a>工厂+注册表模式获取nodeHandler</h1><p>自定义抽取模板有三种不同节点，因此有三种不同节点处理器nodeHandler</p>
+<p>其中一个是默认nodeHandler.</p>
+<p>由于三种节点的数据结构和处理方法完全不同，而需要走统一入口操作节点，因此使用工厂模式，前端操作节点时传入一个nodeCode,工厂根据nodeCode获取对应的nodeHandler处理节点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> ai.ii.supertext.app.serivce.extraction.handler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> ai.ii.supertext.plus.common.util.SpringContext;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ConcurrentHashMap;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NodeHandlerFactory</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ConcurrentHashMap&lt;String, NodeHandler&gt; nodeHandlerMap = <span class="keyword">new</span> <span class="title class_">ConcurrentHashMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">registerHandler</span><span class="params">(NodeHandler handler)</span> &#123;</span><br><span class="line">        nodeHandlerMap.put(handler.getNodeCode(), handler);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> NodeHandler <span class="title function_">getNodeHandler</span><span class="params">(String nodeCode)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (nodeCode == <span class="literal">null</span>) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;action=getNodeHandler node is null. please confirm config&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nodeHandlerMap.getOrDefault(nodeCode, SpringContext.get(DefaultNodeHandler.class));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>工厂通过维护一个ConcurrentHashMap,提供对象注册方法和获取方法，由于在NodeHandler接口中有个PostConstruct方法，在NodeHandler实现类在bean的初始化之后会执行方法将NodeHandler注册到工厂中，nodeCode为key，nodeHandler为value。<br>因此只需用@Component标记实现类，应用启动时就会把对象注册到工厂</p>
+<p>工厂通过传入的nodeCode获取到对应的nodeHandler处理对应节点，如果工厂找不到nodeHandler会返回默认的nodeHandler.</p>
+<p>使用工厂模式管理节点处理器，增强了可维护性和功能扩展性，而且不同的节点操作可以走统一接口，简化了代码，降低维护成本</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/11/01/%E6%99%AE%E9%80%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -176,7 +253,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/11/01/%E6%99%AE%E9%80%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/" class="post-title-link" itemprop="url">'普通线程池的执行流程'</a>
+          <a href="/2024/11/01/%E6%99%AE%E9%80%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/" class="post-title-link" itemprop="url">普通线程池的执行流程</a>
         </h2>
 
         <div class="post-meta-container">
@@ -186,9 +263,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2024-11-01 16:50:09 / 修改时间：16:51:04" itemprop="dateCreated datePublished" datetime="2024-11-01T16:50:09+08:00">2024-11-01</time>
+      <time title="创建时间：2024-11-01 16:50:09" itemprop="dateCreated datePublished" datetime="2024-11-01T16:50:09+08:00">2024-11-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-11-14 20:35:05" itemprop="dateModified" datetime="2024-11-14T20:35:05+08:00">2024-11-14</time>
     </span>
 
   
@@ -271,7 +354,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/10/26/%E5%AE%9E%E5%9C%A8%E6%99%BA%E8%83%BD%E5%AE%9E%E4%B9%A0%E7%BB%8F%E5%8E%86%E6%94%B6%E8%8E%B7/" class="post-title-link" itemprop="url">'实在智能实习经历收获'</a>
+          <a href="/2024/10/26/%E5%AE%9E%E5%9C%A8%E6%99%BA%E8%83%BD%E5%AE%9E%E4%B9%A0%E7%BB%8F%E5%8E%86%E6%94%B6%E8%8E%B7/" class="post-title-link" itemprop="url">实在智能实习经历收获</a>
         </h2>
 
         <div class="post-meta-container">
@@ -284,6 +367,13 @@
 
       <time title="创建时间：2024-10-26 18:32:16" itemprop="dateCreated datePublished" datetime="2024-10-26T18:32:16+08:00">2024-10-26</time>
     </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-11-14 21:08:34" itemprop="dateModified" datetime="2024-11-14T21:08:34+08:00">2024-11-14</time>
+    </span>
 
   
 </div>
@@ -295,7 +385,40 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          
+          <blockquote>
+<p>2024年9月18日入职杭州实在智能有限公司java实习生</p>
+</blockquote>
+<h2 id="实习历程："><a href="#实习历程：" class="headerlink" title="实习历程："></a>实习历程：</h2><ul>
+<li><p>刚入职被要求去杭州烟草部署IDP项目，接触到了k8s流水线打包，集群一键部署，了解到了IDP的私有化应用场景，对IDP项目产品有了初步认识，更加熟练的掌握了linux，docker，k8s的一些命令</p>
+</li>
+<li><p>杭州烟草完成部署后，开始熟悉IDP4.4.0代码，写自定义抽取模板的标注任务相关接口，学习到了很多代码编写规范，枚举，stream流，git，分布式锁等的使用场景，通过阅读复杂的大项目代码，让我的阅读代码能力有了显著的提升，对代码结构和表结构都更加了解</p>
+</li>
+<li><p>接口开发完后与前端联调接口，让我学习到了怎么快速去发现问题，定位问题，debug调试，最后修复异常解决问题，联调过程中提高了与同事沟通交流的能力</p>
+</li>
+<li><p>设计自定义抽取模板的节点数据结构和处理器，这部分让我学会了如何根据prd设计复杂的数据结构，也让我接触到了工厂模式和注册表模式的实际应用场景，对spring有了更深的理解，通过接算法用到了远程调用</p>
+</li>
+<li><p>设计crm合同审核调用接口，通过sql去生成模板和配置模板，通过python代码配置内置规则，与算法对接抽取模板，在接口方法中用到了工厂加注册表模式，提高程序扩展性，可维护性，设计异步任务执行的回调接口，通过redis缓存任务邮箱，最后和任务结果比对，异步返回</p>
+</li>
+<li><p>完成ocr任务对接，联调抽取自定义的任务执行，通过连接k8s集群通过日志跟踪状态，修复bug</p>
+</li>
+</ul>
+<h2 id="实习项目介绍（实习经历）"><a href="#实习项目介绍（实习经历）" class="headerlink" title="实习项目介绍（实习经历）"></a>实习项目介绍（实习经历）</h2><p><strong>项目介绍</strong>：IDP文档审阅系统是一个集成多种文档处理功能的平台，涵盖抽取模板、审核模板、文本比对，OCR识别等模板，支持用户自定义模板配置。该系统大幅降低了文档处理的人工成本，用户通过上传文件便可完成多种文档审阅任务，项目支持线上使用和私有化部署。</p>
+<p><strong>负责模块</strong>：IDP4.4.0自定义抽取模板开发，IDP4.3.0CRM平台合同审核接口开发，私有化定制部署</p>
+<p><strong>主要工作：</strong> </p>
+<ul>
+<li><strong>自定义抽取模板开发</strong>：采用工厂模式+注册表模式设计自定义抽取模板节点数据结构和处理器，使自定义抽取流程灵活可扩展。集成OpenFeign远程调用OCR算法，实现表格抽取功能，通过fallbackFactory做熔断降级策略，当高并发请求而算法服务不可用时通过熔断降级防止资源的浪费并提升5秒以上响应速度。</li>
+<li><strong>NLP节点标注任务管理</strong>：开发了NLP抽取节点标注任务相关功能。通过Redis实现简易分布式锁，确保NLP每个节点最多生成一个标注父任务，避免重复任务创建，确保任务创建具有幂等性。</li>
+<li><strong>OCR集成与CRM审核模板生成</strong>：编写SQL脚本创建OCR抽取模板，并为其配置字段审核规则。调用阿里云数脉API验证合同中公司信息的合法性，生成符合CRM平台审核需求的模板，确保OCR数据的准确性及业务信息的合规性。 </li>
+<li><strong>异步任务处理和结果反馈</strong>：  <br>   1. 为CRM平台开发接口，使用工厂+注册表模式根据文件类型获取对应审核模板异步执行任务，并将任务的唯一标识（task code）和用户邮箱存入Redis中，以追踪任务状态。<br>   2. 任务执行完毕后，通过回调接口获取任务结果，对比Redis中存储的邮箱信息与任务结果中返回的邮箱，确保结果的准确性。<br>   3. 任务结果核对完成后，利用RocketMQ异步推送任务结果至CRM平台，实现结果的实时反馈，提高了系统响应效率与任务处理的稳定性。</li>
+<li><strong>私有化定制部署</strong>：参与系统的私有化部署，基于K8s流水线完成一键打包部署，通过SQL或Shell脚本设定租户授权期限，为客户提供定制化IDP系统。成功完成了杭州烟草、中科海微等客户的私有化部署和授权配置，满足了多客户的个性化需求。</li>
+</ul>
+<h2 id="实习期间遇到的难点："><a href="#实习期间遇到的难点：" class="headerlink" title="实习期间遇到的难点："></a>实习期间遇到的难点：</h2><ul>
+<li><p>项目难点1：由于平台请求要携带邮箱与任务执行结果中的邮箱做比对，而任务执行是异步无法同步返回结果做比对，而且任务执行无法将对应邮箱带进去做审核<br>解决方案：异步执行任务时同步返回一个taskCode，将taskCode和邮箱作为k,v存入redis，当任务异步执行完毕，拿到任务结果和redis中任务对应的邮箱做比对审核</p>
+</li>
+<li><p>项目难点2:由于任务是异步执行的，而业务需要获取到任务结果异步返回给平台<br>首先想的是任务执行完成后将结果入库，用定时任务去扫描数据库得到任务结果返回，这样的话会浪费线程资源，解决方案是设计一个回调接口，当任务异步执行完后请求回调接口，拿到任务执行结果去redis拿邮箱比对然后mq异步返回结果给平台</p>
+</li>
+</ul>
+
       
     </div>
 
