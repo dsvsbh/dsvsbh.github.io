@@ -1,325 +1,36 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+extends includes/layout.pug
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://www.easyicon.cc/icon/tabler-icons/node_modules/@tabler/icons/icons/brand-github.svg">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://www.easyicon.cc/icon/tabler-icons/node_modules/@tabler/icons/icons/brand-github.svg">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+block content
+  #post
+    if top_img === false
+      include includes/header/post-info.pug
 
-<link rel="stylesheet" href="/css/main.css">
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-
-<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-
-    <meta name="description" content="普通线程池的执行流程通常包括以下几个步骤：  线程池初始化在线程池创建时，预先设置好线程池的参数（如核心线程数、最大线程数、任务队列等），并初始化一组核心线程。线程池会根据参数控制线程的创建和销毁，以实现对资源的合理管理。  提交任务当有任务提交到线程池时，线程池会根据当前的线程数和任务队列的状态来判断如何处理该任务。  任务执行流程根据线程池的状态和配置，线程池采取以下策略来执行任务：  核心线">
-<meta property="og:type" content="article">
-<meta property="og:title" content="普通线程池的执行流程">
-<meta property="og:url" content="http://example.com/2024/11/01/%E6%99%AE%E9%80%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/index.html">
-<meta property="og:site_name" content="lzc个人博客">
-<meta property="og:description" content="普通线程池的执行流程通常包括以下几个步骤：  线程池初始化在线程池创建时，预先设置好线程池的参数（如核心线程数、最大线程数、任务队列等），并初始化一组核心线程。线程池会根据参数控制线程的创建和销毁，以实现对资源的合理管理。  提交任务当有任务提交到线程池时，线程池会根据当前的线程数和任务队列的状态来判断如何处理该任务。  任务执行流程根据线程池的状态和配置，线程池采取以下策略来执行任务：  核心线">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-11-01T08:50:09.000Z">
-<meta property="article:modified_time" content="2024-11-14T12:35:05.212Z">
-<meta property="article:author" content="lzc">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="canonical" href="http://example.com/2024/11/01/%E6%99%AE%E9%80%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/">
-
-
-
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2024/11/01/%E6%99%AE%E9%80%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/","path":"2024/11/01/普通线程池的执行流程/","title":"普通线程池的执行流程"}</script>
-
-<script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>普通线程池的执行流程 | lzc个人博客</title>
-  
-
-
-
-
-
-
-
-
-  <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
-  </noscript>
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
-  <div class="headband"></div>
-
-  <main class="main">
-    <div class="column">
-      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <i class="logo-line"></i>
-      <p class="site-title">lzc个人博客</p>
-      <i class="logo-line"></i>
-    </a>
-      <p class="site-subtitle" itemprop="description">lzc</p>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger" aria-label="搜索" role="button">
-    </div>
-  </div>
-</div>
-
-
-
-<nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
-  </ul>
-</nav>
-
-
-
-
-</header>
+    article#article-container.container.post-content
+      if theme.noticeOutdate.enable && page.noticeOutdate !== false 
+        include includes/post/outdate-notice.pug
+      else
+        !=page.content
+    include includes/post/post-copyright.pug
+    .tag_share
+      if (page.tags.length > 0 && theme.post_meta.post.tags)
+        .post-meta__tag-list
+          each item, index in page.tags.data
+            a(href=url_for(item.path)).post-meta__tags #[=item.name]
+      include includes/third-party/share/index.pug
         
-  
-  <aside class="sidebar">
+    if theme.reward.enable && theme.reward.QR_code
+      !=partial('includes/post/reward', {}, {cache: true})
 
-    <div class="sidebar-inner sidebar-overview-active">
-      <ul class="sidebar-nav">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
+    //- ad
+    if theme.ad && theme.ad.post
+      .ads-wrap!=theme.ad.post
 
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <div class="post-toc-wrap sidebar-panel">
-        </div>
-        <!--/noindex-->
+    if theme.post_pagination
+      include includes/pagination.pug
+    if theme.related_post && theme.related_post.enable
+      != related_posts(page,site.posts)
 
-        <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">lzc</p>
-  <div class="site-description" itemprop="description">欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档</div>
-</div>
-<div class="site-state-wrap animated">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">8</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author animated">
-      <span class="links-of-author-item">
-        <a href="https://blog.csdn.net/m0_73163793" title="csdn → https:&#x2F;&#x2F;blog.csdn.net&#x2F;m0_73163793" rel="noopener me" target="_blank">csdn</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://github.com/dsvsbh" title="github → https:&#x2F;&#x2F;github.com&#x2F;dsvsbh" rel="noopener me" target="_blank">github</a>
-      </span>
-  </div>
-
-        </div>
-      </div>
-    </div>
-
-    
-  </aside>
-
-
-    </div>
-
-    <div class="main-inner post posts-expand">
-
-
-  
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/11/01/%E6%99%AE%E9%80%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="lzc">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lzc个人博客">
-      <meta itemprop="description" content="欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="普通线程池的执行流程 | lzc个人博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          普通线程池的执行流程
-        </h1>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-11-01 16:50:09" itemprop="dateCreated datePublished" datetime="2024-11-01T16:50:09+08:00">2024-11-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-11-14 20:35:05" itemprop="dateModified" datetime="2024-11-14T20:35:05+08:00">2024-11-14</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody"><p>普通线程池的执行流程通常包括以下几个步骤：</p>
-<ol>
-<li><p><strong>线程池初始化</strong><br>在线程池创建时，预先设置好线程池的参数（如核心线程数、最大线程数、任务队列等），并初始化一组核心线程。线程池会根据参数控制线程的创建和销毁，以实现对资源的合理管理。</p>
-</li>
-<li><p><strong>提交任务</strong><br>当有任务提交到线程池时，线程池会根据当前的线程数和任务队列的状态来判断如何处理该任务。</p>
-</li>
-<li><p><strong>任务执行流程</strong><br>根据线程池的状态和配置，线程池采取以下策略来执行任务：</p>
-<ul>
-<li><strong>核心线程数未满</strong>：如果当前运行的线程数量少于核心线程数，则线程池会立即创建一个新的线程来执行任务。</li>
-<li><strong>核心线程已满，任务队列未满</strong>：如果核心线程数已满，任务会被放入任务队列中，等待空闲线程执行。</li>
-<li><strong>任务队列已满，且线程数未达上限</strong>：如果任务队列已满，且线程池中线程数少于最大线程数，线程池会创建一个新的线程来执行任务。</li>
-<li><strong>任务队列已满，且线程数达到上限</strong>：如果任务队列和线程池的线程数都已达到上限，线程池根据拒绝策略（如抛出异常、丢弃任务等）来处理新任务。</li>
-</ul>
-</li>
-<li><p><strong>线程执行任务</strong><br>被分配到任务的线程开始执行任务代码。当任务执行完毕后，线程会检查任务队列中是否还有等待执行的任务，如果有，则继续从队列中获取任务并执行。</p>
-</li>
-<li><p><strong>线程回收与销毁</strong></p>
-<ul>
-<li><strong>空闲线程回收</strong>：如果一个线程在指定的空闲时间内没有接收到新任务，且线程池的线程数超过了核心线程数，那么线程池会将该线程回收，释放资源。</li>
-<li><strong>线程池关闭</strong>：当调用线程池的 <code>shutdown</code> 方法后，线程池会停止接收新任务，并等待所有已提交的任务执行完毕。可以使用 <code>shutdownNow</code> 方法立即中断所有线程，强制关闭线程池。</li>
-</ul>
-</li>
-<li><p><strong>任务结束后的清理</strong><br>当所有任务执行完毕，线程池会根据配置的回收策略，关闭空闲的线程并清理资源，确保系统资源不会被长期占用。</p>
-</li>
-</ol>
-<p>整个流程使得线程池能够高效地复用线程资源，并在高并发场景下避免频繁的线程创建和销毁，有效地控制系统的资源占用和性能表现。</p>
-
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-
-        
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2024/10/26/%E5%AE%9E%E5%9C%A8%E6%99%BA%E8%83%BD%E5%AE%9E%E4%B9%A0%E7%BB%8F%E5%8E%86%E6%94%B6%E8%8E%B7/" rel="prev" title="实在智能实习经历收获">
-                  <i class="fa fa-angle-left"></i> 实在智能实习经历收获
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2024/11/14/%E5%B7%A5%E5%8E%82-%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%A8%A1%E5%BC%8F%E8%AE%BE%E8%AE%A1nodeHandler/" rel="next" title="工厂+注册表模式设计nodeHandler">
-                  工厂+注册表模式设计nodeHandler <i class="fa fa-angle-right"></i>
-                </a>
-            </div>
-          </div>
-    </footer>
-  </article>
-</div>
-
-
-
-
-
-
-</div>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-inner">
-
-  <div class="copyright">
-    &copy; 
-    <span itemprop="copyrightYear">2024</span>
-    <span class="with-love">
-      <i class="fa fa-heart"></i>
-    </span>
-    <span class="author" itemprop="copyrightHolder">lzc</span>
-  </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
-  </div>
-
-    </div>
-  </footer>
-
-  
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-  </div>
-  <div class="sidebar-dimmer"></div>
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up fa-lg"></i>
-    <span>0%</span>
-  </div>
-
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
-
-
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
-
-  
-
-
-
-
-
-
-  
-
-
-
-
-
-</body>
-</html>
+    if page.comments !== false && theme.comments.use
+      - var commentsJsLoad = true
+      !=partial('includes/third-party/comments/index', {}, {cache: true})
+      
