@@ -1,0 +1,243 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>高并发执行大粒度写锁SQL查询，损耗MySql服务器什么资源？ | lzcblog</title><meta name="author" content="lzc"><meta name="copyright" content="lzc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="问题在面试过程中被问到一个问题： 高并发下执行SQL语句：select * from t for update ，会损耗MySql服务器的什么资源？ 思考 for update 语句是对查到的记录进行加写锁（行级锁），而这个查询语句并没有where查询条件，说明这个语句对整个表记录上了写锁。 在高并发执行这个语句的时候会导致大量事务因为没抢到这个锁而阻塞，问题转化为了：服务器收到高并发请求，并且大">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高并发执行大粒度写锁SQL查询，损耗MySql服务器什么资源？">
+<meta property="og:url" content="http://example.com/2025/10/08/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%89%A7%E8%A1%8C%E5%A4%A7%E7%B2%92%E5%BA%A6%E5%86%99%E9%94%81SQL%E6%9F%A5%E8%AF%A2%EF%BC%8C%E6%8D%9F%E8%80%97MySql%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%80%E4%B9%88%E8%B5%84%E6%BA%90%EF%BC%9F/index.html">
+<meta property="og:site_name" content="lzcblog">
+<meta property="og:description" content="问题在面试过程中被问到一个问题： 高并发下执行SQL语句：select * from t for update ，会损耗MySql服务器的什么资源？ 思考 for update 语句是对查到的记录进行加写锁（行级锁），而这个查询语句并没有where查询条件，说明这个语句对整个表记录上了写锁。 在高并发执行这个语句的时候会导致大量事务因为没抢到这个锁而阻塞，问题转化为了：服务器收到高并发请求，并且大">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/head-pic.png">
+<meta property="article:published_time" content="2025-10-08T03:22:57.000Z">
+<meta property="article:modified_time" content="2025-10-08T03:53:32.508Z">
+<meta property="article:author" content="lzc">
+<meta property="article:tag" content="Mysql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/head-pic.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/10/08/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%89%A7%E8%A1%8C%E5%A4%A7%E7%B2%92%E5%BA%A6%E5%86%99%E9%94%81SQL%E6%9F%A5%E8%AF%A2%EF%BC%8C%E6%8D%9F%E8%80%97MySql%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%80%E4%B9%88%E8%B5%84%E6%BA%90%EF%BC%9F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '高并发执行大粒度写锁SQL查询，损耗MySql服务器什么资源？',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.png);"></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/head-pic.png" alt="Logo"><span class="site-name">lzcblog</span></a><a class="nav-page-title" href="/"><span class="site-name">高并发执行大粒度写锁SQL查询，损耗MySql服务器什么资源？</span></a></span><div id="menus"></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">高并发执行大粒度写锁SQL查询，损耗MySql服务器什么资源？</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-08T03:22:57.000Z" title="发表于 2025-10-08 11:22:57">2025-10-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-08T03:53:32.508Z" title="更新于 2025-10-08 11:53:32">2025-10-08</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在面试过程中被问到一个问题：</p>
+<p>高并发下执行SQL语句：select * from t for update ，会损耗MySql服务器的什么资源？</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
+<li>for update 语句是对查到的记录进行加写锁（行级锁），而这个查询语句并没有where查询条件，说明这个语句对整个表记录上了写锁。</li>
+<li>在高并发执行这个语句的时候会导致大量事务因为没抢到这个锁而阻塞，问题转化为了：服务器收到高并发请求，并且大量请求处理出现阻塞，服务器什么资源会出现瓶颈？</li>
+</ol>
+<h2 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h2><p>这是一个非常好的问题，它触及了系统性能和稳定性的核心。当一个节点的QPS很高，并且这些请求发生了阻塞，会从多个层面快速损耗节点的关键资源，最终导致服务不可用。</p>
+<p>简单来说，最直接损耗的资源是线程，但会像多米诺骨牌一样，连锁消耗以下四大类资源：</p>
+<ul>
+<li>​线程资源​</li>
+<li>内存资源​</li>
+<li>​CPU 资源​</li>
+<li>​网络&#x2F;文件描述符资源​</li>
+</ul>
+<p>下面我们详细拆解这个过程。</p>
+<h3 id="1-线程资源-最直接的损耗"><a href="#1-线程资源-最直接的损耗" class="headerlink" title="1. 线程资源 - 最直接的损耗"></a>1. 线程资源 - 最直接的损耗</h3><p>​机制​：在典型的Web服务器（如Tomcat、Netty）或应用框架（如Spring MVC）中，通常使用线程池来处理并发请求。每个进来的请求都会由一个工作线程来处理。</p>
+<p>​损耗过程​：<br>当请求处理被阻塞时（例如，等待数据库响应、调用缓慢的下游服务、获取锁等），这个工作线程无法被释放。它虽然不占用CPU，但它会一直被这个请求占用，处于等待状态。</p>
+<p>如果阻塞的请求持续涌入，线程池中的线程会被一个个地占用。当所有线程都被阻塞占满时，线程池就耗尽了。</p>
+<p>​后果​：​线程池耗尽。此时，新的请求无法得到线程来处理，服务器会开始拒绝请求（返回5xx错误，如503 Service Unavailable）。这是高QPS伴随阻塞时最先出现、也最典型的故障现象。</p>
+<h3 id="2-内存资源-紧随其后的损耗"><a href="#2-内存资源-紧随其后的损耗" class="headerlink" title="2. 内存资源 - 紧随其后的损耗"></a>2. 内存资源 - 紧随其后的损耗</h3><p>​机制​：每个活跃的线程都有其独立的线程栈，需要占用一定的内存（例如，在JVM中，可通过 -Xss参数设置栈大小，通常默认是1MB）。更重要的是，每个请求通常都会携带一些数据（如请求参数、Session信息、数据库连接对象等），这些数据会作为对象分配在堆内存中。</p>
+<p>​损耗过程​：</p>
+<p>​线程栈内存​：大量被阻塞的线程意味着有大量几乎不工作的线程存在，但它们每个都占用了不小的栈内存。1000个被阻塞的线程就可能占用近1GB的栈内存。</p>
+<p>​堆内存​：每个被阻塞的请求，其关联的请求和响应对象会长时间无法被回收。随着阻塞请求的堆积，会有大量临时对象堆积在堆中，导致内存使用率飙升。</p>
+<p>​后果​：​内存溢出。特别是JVM的堆内存被占满后，会频繁触发Full GC。如果GC无法回收这些因阻塞而无法完成处理的对象，最终会抛出 OutOfMemoryError，导致整个应用进程崩溃。</p>
+<h3 id="3-CPU-资源-间接但严重的损耗"><a href="#3-CPU-资源-间接但严重的损耗" class="headerlink" title="3. CPU 资源 - 间接但严重的损耗"></a>3. CPU 资源 - 间接但严重的损耗</h3><p>​机制​：CPU本身并不直接消耗于“阻塞”，阻塞的线程会让出CPU。但高并发阻塞会通过以下方式间接消耗大量CPU：</p>
+<p>​大量的上下文切换​：当有成千上万个线程（大部分处于阻塞状态）时，操作系统的线程调度器需要不断地在可运行的线程之间进行切换，这个过程（上下文切换）本身是非常消耗CPU的。</p>
+<p>​频繁的垃圾回收​：如上所述，内存压力会引发频繁的GC，而GC（尤其是Full GC）是一个CPU密集型操作。系统本应用来处理业务的CPU周期，被大量浪费在GC和上下文切换上。</p>
+<p>​后果​：​CPU利用率飙升，但系统吞吐量极低。你会发现CPU使用率很高，但实际处理的请求数（TPS）却很低。系统响应变得极其缓慢。</p>
+<h3 id="4-网络连接与文件描述符-底层资源的损耗"><a href="#4-网络连接与文件描述符-底层资源的损耗" class="headerlink" title="4. 网络连接与文件描述符 - 底层资源的损耗"></a>4. 网络连接与文件描述符 - 底层资源的损耗</h3><p>​机制​：每个网络连接、每个打开的文件都会占用一个文件描述符。操作系统对单个进程能打开的文件描述符数量是有限制的。</p>
+<p>​损耗过程​：由于请求处理被阻塞，TCP连接无法被及时关闭。新的请求又在不断建立连接，导致连接数和打开的文件描述符持续增长。</p>
+<p>​后果​：​文件描述符耗尽。当达到上限时，操作系统会拒绝进程建立新的连接或打开文件，表现为无法接受新请求、日志打不开等，服务彻底僵死。</p>
+<h3 id="如何应对与缓解？"><a href="#如何应对与缓解？" class="headerlink" title="如何应对与缓解？"></a>如何应对与缓解？</h3><ul>
+<li>​优化阻塞点​：从根本上解决问题，优化慢SQL、缓存结果、使用更快的下游服务。</li>
+<li>​设置超时与重试​：为所有外部调用设置合理的超时时间，避免无限期等待。并配合合理的重试策略（如退避重试）。</li>
+<li>​限流​：在入口层面进行限流，拒绝超出系统处理能力的请求，保护节点不被打垮。常用算法有令牌桶、漏桶。</li>
+<li>​熔断​：当下游服务不可用或响应过慢时，主动熔断对其的调用，直接快速失败，避免线程资源被耗尽。</li>
+<li>​异步化​：使用异步非阻塞的编程模型（如Reactor、WebFlux），用少量线程处理大量并发连接，从根本上避免“一个线程一个请求”的阻塞模型。</li>
+<li>​扩容与降级​：水平扩展节点数量，或在系统压力大时，关闭非核心功能，保障核心链路畅通。</li>
+</ul>
+<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><p>针对原问题解决方案：</p>
+<ol>
+<li>降低锁粒度：如果业务并不需要全表数据，可以加上where条件筛选，然后对查到的记录上锁，防止锁住全表导致其他所有事务阻塞。</li>
+<li>降低锁级别：如果查询只是想要防止在读的过程中数据被篡改，可以将写锁降级为读锁，这样其他事务也可以拿到读锁进来读数据，只会阻塞写操作。</li>
+<li>分库分表：当数据量很大的时候可以考虑分库分表，这样多个库表之间的事务是可以并行的，可以降低对单个数据库或者表的压力。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">lzc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/10/08/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%89%A7%E8%A1%8C%E5%A4%A7%E7%B2%92%E5%BA%A6%E5%86%99%E9%94%81SQL%E6%9F%A5%E8%AF%A2%EF%BC%8C%E6%8D%9F%E8%80%97MySql%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%80%E4%B9%88%E8%B5%84%E6%BA%90%EF%BC%9F/">http://example.com/2025/10/08/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%89%A7%E8%A1%8C%E5%A4%A7%E7%B2%92%E5%BA%A6%E5%86%99%E9%94%81SQL%E6%9F%A5%E8%AF%A2%EF%BC%8C%E6%8D%9F%E8%80%97MySql%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%80%E4%B9%88%E8%B5%84%E6%BA%90%EF%BC%9F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">lzcblog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Mysql/">Mysql</a></div><div class="post-share"><div class="social-share" data-image="/img/head-pic.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/10/07/G1%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%8E%A7%E5%88%B6STW%E7%9A%84%E5%81%9C%E9%A1%BF%E6%97%B6%E9%97%B4/" title="G1垃圾收集器控制STW的停顿时间"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">G1垃圾收集器控制STW的停顿时间</div></div><div class="info-2"><div class="info-item-1">什么是G1垃圾回收器，有哪些特点？定义G1（Garbage-First）是一款在 JDK 7 中正式引入、并在 JDK 9 及之后版本成为默认的垃圾回收器。它的设计目标是在可控的停顿时间内，实现高吞吐量的垃圾回收，尤其适合大内存、多核处理器的应用场景。 特点 作用于堆内存的年轻代和老年代 整体使用标记整理垃圾回收算法 可以控制STW的最长停顿时间  G1是如何控制STW的最长停顿时间的？首先需要了解G1垃圾回收器的内存模型 传统回收器（如 Parallel Scavenge、CMS）将堆内存划分为连续的、固定大小的物理分代​： ​年轻代​：一块连续的内存区域，包含 Eden 和两个 Survivor 区。 ​老年代​：另一块连续的内存区域。 G1:而 ​G1 放弃了这种物理上的连续分代概念。它将整个堆划分为多个大小相等的独立内存块，称为 ​Region，并为每个 Region 赋予一个逻辑上的分代角色。 大小​：整个堆被划分为约 2048 个大小相等的 Region。Region 的大小是可配置的（通过 -XX:G1HeapRegionSize），范围一般为 1MB 到...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/head-pic.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">lzc</div><div class="author-info-description">欢迎来访本人个人博客，这里记录了个人的学习笔记，个人经验还有技术文档</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">27</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dsvsbh"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/dsvsbh" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:291396312@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">welcome to my blog and enjoy it!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%80%83"><span class="toc-number">2.</span> <span class="toc-text">思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E7%AD%94"><span class="toc-number">3.</span> <span class="toc-text">解答</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%BA%BF%E7%A8%8B%E8%B5%84%E6%BA%90-%E6%9C%80%E7%9B%B4%E6%8E%A5%E7%9A%84%E6%8D%9F%E8%80%97"><span class="toc-number">3.1.</span> <span class="toc-text">1. 线程资源 - 最直接的损耗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%86%85%E5%AD%98%E8%B5%84%E6%BA%90-%E7%B4%A7%E9%9A%8F%E5%85%B6%E5%90%8E%E7%9A%84%E6%8D%9F%E8%80%97"><span class="toc-number">3.2.</span> <span class="toc-text">2. 内存资源 - 紧随其后的损耗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-CPU-%E8%B5%84%E6%BA%90-%E9%97%B4%E6%8E%A5%E4%BD%86%E4%B8%A5%E9%87%8D%E7%9A%84%E6%8D%9F%E8%80%97"><span class="toc-number">3.3.</span> <span class="toc-text">3. CPU 资源 - 间接但严重的损耗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E4%B8%8E%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6-%E5%BA%95%E5%B1%82%E8%B5%84%E6%BA%90%E7%9A%84%E6%8D%9F%E8%80%97"><span class="toc-number">3.4.</span> <span class="toc-text">4. 网络连接与文件描述符 - 底层资源的损耗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%E4%B8%8E%E7%BC%93%E8%A7%A3%EF%BC%9F"><span class="toc-number">3.5.</span> <span class="toc-text">如何应对与缓解？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="toc-number">4.</span> <span class="toc-text">问题解决</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/08/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%89%A7%E8%A1%8C%E5%A4%A7%E7%B2%92%E5%BA%A6%E5%86%99%E9%94%81SQL%E6%9F%A5%E8%AF%A2%EF%BC%8C%E6%8D%9F%E8%80%97MySql%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%80%E4%B9%88%E8%B5%84%E6%BA%90%EF%BC%9F/" title="高并发执行大粒度写锁SQL查询，损耗MySql服务器什么资源？">高并发执行大粒度写锁SQL查询，损耗MySql服务器什么资源？</a><time datetime="2025-10-08T03:22:57.000Z" title="发表于 2025-10-08 11:22:57">2025-10-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/07/G1%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%8E%A7%E5%88%B6STW%E7%9A%84%E5%81%9C%E9%A1%BF%E6%97%B6%E9%97%B4/" title="G1垃圾收集器控制STW的停顿时间">G1垃圾收集器控制STW的停顿时间</a><time datetime="2025-10-07T05:25:54.000Z" title="发表于 2025-10-07 13:25:54">2025-10-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/03/%E8%99%BE%E7%9A%AE%E4%B8%80%E9%9D%A2%E9%9D%A2%E7%BB%8F/" title="虾皮一面面经">虾皮一面面经</a><time datetime="2025-10-03T13:28:33.000Z" title="发表于 2025-10-03 21:28:33">2025-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/15/mysql%E7%9A%84binlog%E4%BD%9C%E7%94%A8%E3%80%81%E6%A0%BC%E5%BC%8F%E3%80%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/" title="mysql的binlog作用、模式、应用场景">mysql的binlog作用、模式、应用场景</a><time datetime="2025-09-15T03:54:46.000Z" title="发表于 2025-09-15 11:54:46">2025-09-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/12/%E7%A7%8B%E6%8B%9B%E5%AD%97%E8%8A%82%E6%8A%96%E9%9F%B3%E4%B8%80%E9%9D%A2%E9%9D%A2%E7%BB%8F/" title="秋招字节抖音一面面经">秋招字节抖音一面面经</a><time datetime="2025-09-12T02:47:53.000Z" title="发表于 2025-09-12 10:47:53">2025-09-12</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/background.png);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By lzc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
